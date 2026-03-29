@@ -1,0 +1,134 @@
+
+# 📖 README – Sistema de Agendamento Clínico
+
+## 📌 Introdução
+Este projeto consiste em um **aplicativo móvel** desenvolvido em **React Native + Expo**, integrado a um **backend em Node.js** com banco de dados **PostgreSQL**.  
+O sistema permite que pacientes agendem consultas médicas de forma simples e prática, recebam notificações e acompanhem seu histórico.
+
+---
+
+## 🎯 Objetivo
+Facilitar o processo de agendamento clínico, reduzindo filas presenciais e aumentando a eficiência no gerenciamento de consultas.
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+### **Frontend (Mobile)**
+- React Native  
+- Expo  
+- React Navigation  
+- Axios (para comunicação com API)  
+
+### **Backend**
+- Node.js  
+- Express.js  
+- JWT (autenticação)  
+- Bcrypt (segurança de senhas)  
+- Sequelize ou Prisma (ORM)  
+
+### **Banco de Dados**
+- PostgreSQL  
+
+---
+
+## 📂 Estrutura do Projeto
+
+```
+/backend
+  ├── controllers
+  ├── models
+  ├── routes
+  ├── config
+  └── server.js
+
+/frontend
+  ├── src
+      ├── screens
+      ├── components
+      ├── navigation
+      ├── services
+      └── App.js
+```
+
+---
+
+## 🔗 Rotas da API (Principais)
+
+### Autenticação
+- `POST /auth/register` → Cadastro de paciente  
+- `POST /auth/login` → Login e geração de token JWT  
+
+### Pacientes
+- `GET /pacientes/:id` → Detalhes de paciente  
+- `PUT /pacientes/:id` → Atualizar dados  
+
+### Médicos
+- `GET /medicos` → Listar médicos  
+- `POST /medicos` → Cadastrar médico (admin)  
+
+### Especialidades
+- `GET /especialidades` → Listar especialidades  
+
+### Agenda
+- `GET /agenda/:medicoId` → Horários disponíveis  
+- `POST /agenda/:medicoId` → Definir horários  
+
+### Consultas
+- `POST /consultas` → Agendar consulta  
+- `PUT /consultas/:id/cancelar` → Cancelar consulta  
+
+---
+
+## 🚀 Como Executar
+
+### **Backend**
+```bash
+# Instalar dependências
+cd backend
+npm install
+
+# Configurar variáveis de ambiente (.env)
+DB_HOST=localhost
+DB_USER=postgres
+DB_PASS=senha
+DB_NAME=clinica
+JWT_SECRET=segredo
+
+# Rodar servidor
+npm start
+```
+
+### **Frontend**
+```bash
+# Instalar dependências
+cd Mobile
+npm install
+
+# Rodar app com Expo
+npx expo start
+```
+
+---
+
+## 📌 Funcionalidades
+- Cadastro e login de pacientes  
+- Visualização de especialidades e médicos  
+- Consulta de agendas disponíveis  
+- Agendamento e cancelamento de consultas  
+- Notificações push via Expo  
+
+---
+
+## 👥 Usuários do Sistema
+- **Paciente** → agenda consultas via app  
+- **Médico** → define sua agenda  
+- **Administrador** → gerencia médicos e especialidades  
+
+---
+
+## 📅 Próximos Passos
+- Implementar painel web para administradores  
+- Adicionar suporte a recepcionistas (agendamento presencial)  
+- Integrar sistema de pagamento online (fase futura)  
+
+---

@@ -1,0 +1,1 @@
+CREATE DATABASE prisma_db;
