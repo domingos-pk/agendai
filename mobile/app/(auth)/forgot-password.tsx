@@ -10,7 +10,10 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState("");
 
   const handleSubmit = () => {
-    router.push("/(auth)/enter-code");
+    router.push({
+      pathname: "/(auth)/enter-code",
+      params: { from: "forgot-password" }
+    });
   };
 
   return (

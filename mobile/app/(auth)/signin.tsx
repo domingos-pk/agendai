@@ -11,7 +11,7 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
 
   const handleSubmit = () => {
-    router.push("/home");
+    router.replace("/(tabs)/home");
   };
 
   return (

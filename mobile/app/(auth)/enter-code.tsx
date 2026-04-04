@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
 import { Colors } from "../../src/constants/colors";
 
@@ -9,6 +9,7 @@ const CODE_LENGTH = 6;
 
 const EnterCode = () => {
   const router = useRouter();
+  const { from } = useLocalSearchParams<{ from: string }>();
   const [code, setCode] = useState<string[]>(Array(CODE_LENGTH).fill(""));
   const inputs = useRef<(TextInput | null)[]>([]);
 
@@ -32,7 +33,11 @@ const EnterCode = () => {
   };
 
   const handleSubmit = () => {
-    router.push("./new-password");
+    if (from === "signup") {
+      router.replace("/(tabs)/home");
+    } else {
+      router.push("/(auth)/new-password");
+    }
   };
 
   const isFilled = code.every((d) => d !== "");

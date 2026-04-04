@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 // Mantém a splash screen visível enquanto o app carrega
 SplashScreen.preventAutoHideAsync();
@@ -18,20 +19,22 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      {/* Telas fora das Tabs (Onboarding, Welcome) */}
-      <Stack.Screen name="index" />
-      <Stack.Screen name="onboarding" />
-      <Stack.Screen name="welcome" />
+    <SafeAreaProvider>
+      <Stack screenOptions={{ headerShown: false }}>
+        {/* Telas fora das Tabs (Onboarding, Welcome) */}
+        <Stack.Screen name="index" />
+        <Stack.Screen name="onboarding" />
+        <Stack.Screen name="welcome" />
 
-      {/* Grupo de Autenticação */}
-      <Stack.Screen name="(auth)" />
+        {/* Grupo de Autenticação */}
+        <Stack.Screen name="(auth)" />
 
-      {/* O grupo das Tabs é tratado como uma única rota no Stack raiz */}
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        {/* O grupo das Tabs é tratado como uma única rota no Stack raiz */}
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
-      <Stack.Screen name="+not-found" />
-    </Stack>
+        <Stack.Screen name="+not-found" />
+      </Stack>
+    </SafeAreaProvider>
   );
 }
 

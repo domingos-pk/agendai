@@ -7,13 +7,16 @@ import { Colors } from "../../src/constants/colors";
 
 const SignUp = () => {
   const router = useRouter();
-  const [form, setForm] = useState({ username: "", name: "", email: "", password: "" });
+  const [form, setForm] = useState({ username: "", name: "", email: "", password: "", confirmPassword: ""  });
 
   const update = (field: keyof typeof form, value: string) =>
     setForm((prev) => ({ ...prev, [field]: value }));
 
   const handleSubmit = () => {
-    router.push("/(auth)/enter-code");
+    router.push({
+      pathname: "/(auth)/enter-code",
+      params: { from: "signup" }
+    });
   };
 
   const fields: {
@@ -27,6 +30,7 @@ const SignUp = () => {
     { key: "name", label: "Nome completo", icon: User, placeholder: "João Silva", secure: false },
     { key: "email", label: "E-mail", icon: Mail, placeholder: "ex. joao@exemplo.com", secure: false, keyboardType: "email-address" },
     { key: "password", label: "Senha", icon: Lock, placeholder: "••••••••", secure: true },
+    { key: "confirmPassword", label: "Confirma Senha", icon: Lock, placeholder: "••••••••", secure: true },
   ];
 
   return (

@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Colors } from "../src/constants/colors";
 
-const welcomeHero = require("../assets/images/welcome-hero.png");
+const welcomeHero = require("../src/assets/images/welcome-hero.png");
 
 const Welcome = () => {
   const router = useRouter();
