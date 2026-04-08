@@ -5,6 +5,7 @@ import Animated, {
   useSharedValue,
   withSpring,
   withTiming,
+  interpolateColor,
 } from 'react-native-reanimated';
 import { Colors } from '../../constants/colors';
 
@@ -26,7 +27,7 @@ const Pagination = ({ total, current }: PaginationProps) => {
 // Componente Dot separado para animações individuais
 const Dot = ({ isActive }: { isActive: boolean }) => {
   const width = useSharedValue(isActive ? 28 : 8);
-  const backgroundColor = useSharedValue(isActive ? Colors.primary : '#D1D5DB');
+  const colorProgress = useSharedValue(isActive ? 1 : 0);
 
   useEffect(() => {
     if (isActive) {
@@ -35,21 +36,28 @@ const Dot = ({ isActive }: { isActive: boolean }) => {
         stiffness: 300,
         mass: 1,
       });
-      backgroundColor.value = withTiming(Colors.primary);
+      colorProgress.value = withTiming(1);
     } else {
       width.value = withSpring(8, {
         damping: 25,
         stiffness: 300,
         mass: 1,
       });
-      backgroundColor.value = withTiming('#D1D5DB');
+      colorProgress.value = withTiming(0);
     }
-  }, [isActive, backgroundColor, width]);
+  }, [isActive, colorProgress, width]);
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    width: width.value,
-    backgroundColor: backgroundColor.value,
-  }));
+  const animatedStyle = useAnimatedStyle(() => {
+    const bgColor = interpolateColor(
+      colorProgress.value,
+      [0, 1],
+      ['#D1D5DB', Colors.primary]
+    );
+    return {
+      width: width.value,
+      backgroundColor: bgColor as string,
+    };
+  });
 
   return <Animated.View style={[styles.dot, animatedStyle]} />;
 };

@@ -10,7 +10,16 @@ const Index = () => {
   useEffect(() => {
     const checkOnboarding = async () => {
       try {
-        const value = await SecureStore.getItemAsync("agendai_onboarding_done");
+        // Cria um timeout de 2 segundos. Se o SecureStore travar (comum em Emuladores Android sem PIN configurado), ele avança.
+        const timeoutPromise = new Promise<string | null>((resolve) => 
+          setTimeout(() => resolve(null), 2000)
+        );
+
+        const value = await Promise.race([
+          SecureStore.getItemAsync("agendai_onboarding_done"),
+          timeoutPromise
+        ]);
+
         if (value === "true") {
           setOnboardingDone(true);
         }

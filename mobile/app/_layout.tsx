@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 // Mantém a splash screen visível enquanto o app carrega
@@ -19,22 +20,23 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <SafeAreaProvider>
-      <Stack screenOptions={{ headerShown: false }}>
-        {/* Telas fora das Tabs (Onboarding, Welcome) */}
-        <Stack.Screen name="index" />
-        <Stack.Screen name="onboarding" />
-        <Stack.Screen name="welcome" />
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <Stack screenOptions={{ headerShown: false }}>
+          {/* Telas fora das Tabs (Onboarding, Welcome) - Onboarding agora é a primeira */}
+          <Stack.Screen name="onboarding" />
+          <Stack.Screen name="index" />
+          <Stack.Screen name="welcome" />
 
-        {/* Grupo de Autenticação */}
-        <Stack.Screen name="(auth)" />
+          {/* Grupo de Autenticação */}
+          <Stack.Screen name="(auth)" />
 
-        {/* O grupo das Tabs é tratado como uma única rota no Stack raiz */}
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          {/* O grupo das Tabs é tratado como uma única rota no Stack raiz */}
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </SafeAreaProvider>
+          <Stack.Screen name="+not-found" />
+        </Stack>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
-

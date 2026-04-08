@@ -2,21 +2,34 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform, Image, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Bell, Search, Mic, Activity, Home as HomeIcon, BriefcaseMedical, Pill, Calendar, Clock, MapPin, Star, Sparkles } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
 import { Colors } from '../../src/constants/colors';
+import { useBreakpoint } from '../../src/hooks/useBreakpoint';
 
 const Home = () => {
+  const router = useRouter();
+  const { isSmallPhone, isTablet, width } = useBreakpoint();
+
+  // Cálculo para o grid de doutores em tablets (2 colunas)
+  const doctorColumns = isTablet ? 2 : 1;
+  const doctorCardWidth = (width - 40 - (isTablet ? 16 : 0)) / doctorColumns;
+
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        stickyHeaderIndices={[1]}
+      >
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.userInfo}>
-            <Image 
-              source={require('../../src/assets/avatar/avatar.jpg')} 
-              style={styles.avatar} 
+            <Image
+              source={require('../../src/assets/avatar/avatar.jpg')}
+              style={[styles.avatar, isSmallPhone && styles.avatarSmall]}
             />
             <View>
-              <Text style={styles.userName}>Du Pedro</Text>
+              <Text style={[styles.userName, isSmallPhone && styles.userNameSmall]}>Du Pedro</Text>
               <View style={styles.locationContainer}>
                 <MapPin size={12} color={Colors.primary} />
                 <Text style={styles.locationText}>Luanda</Text>
@@ -30,21 +43,23 @@ const Home = () => {
         </View>
 
         {/* Search Bar */}
-        <View style={styles.searchContainer}>
-          <Search size={20} color={Colors.textSecondary} style={styles.searchIcon} />
-          <TextInput 
-            placeholder="Procure especialistas, clínicas..." 
-            placeholderTextColor={Colors.textSecondary}
-            style={styles.searchInput}
-          />
-          <Mic size={20} color={Colors.textSecondary} />
+        <View style={styles.stickySearchWrapper}>
+          <View style={styles.searchContainer}>
+            <Search size={20} color={Colors.textSecondary} style={styles.searchIcon} />
+            <TextInput
+              placeholder="Procure especialistas, clínicas..."
+              placeholderTextColor={Colors.textSecondary}
+              style={styles.searchInput}
+            />
+            <Mic size={20} color={Colors.textSecondary} />
+          </View>
         </View>
 
         {/* Services */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Serviços</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('../services')}>
               <Text style={styles.seeAll}>Ver Todos</Text>
             </TouchableOpacity>
           </View>
@@ -64,12 +79,12 @@ const Home = () => {
               <Text style={styles.seeAll}>Ver Todos</Text>
             </TouchableOpacity>
           </View>
-          
+
           <View style={styles.appointmentCard}>
             <View style={styles.appointmentInfo}>
               <Text style={styles.doctorName}>Dr. Shaun Murphy</Text>
               <Text style={styles.specialty}>Especialista em Cirurgião Geral</Text>
-              
+
               <View style={styles.dateTimeContainer}>
                 <View style={styles.dateTimeItem}>
                   <Calendar size={14} color={Colors.white} />
@@ -86,9 +101,9 @@ const Home = () => {
                 <Text style={styles.rescheduleText}>Remarcar</Text>
               </TouchableOpacity>
             </View>
-            <Image 
-              source={require('../../src/assets/medical/Dr. Shaun Murphy.jpg')} 
-              style={styles.doctorImageMain} 
+            <Image
+              source={require('../../src/assets/medical/Dr. Shaun Murphy.jpg')}
+              style={styles.doctorImageMain}
             />
           </View>
         </View>
@@ -97,12 +112,12 @@ const Home = () => {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Especialidades</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('../specialties')}>
               <Text style={styles.seeAll}>Ver Todos</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.specialtiesRow}>
-            <SpecialtyItem color="#EFF6FF" emoji="👨‍⚕️" label="Geral" />
+            <SpecialtyItem color="#EFF6FF" emoji="👨‍⚕️" label="Consulta Geral" />
             <SpecialtyItem color="#FEF2F2" emoji="🧠" label="Neurologia" />
             <SpecialtyItem color="#FDF4FF" emoji="👶" label="Pediatria" />
             <SpecialtyItem color="#FFFBEB" emoji="🩻" label="Radiologia" />
@@ -112,72 +127,42 @@ const Home = () => {
         {/* Popular Doctors */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Doctores Populares</Text>
+            <Text style={styles.sectionTitle}>Doutores Populares</Text>
             <TouchableOpacity>
               <Text style={styles.seeAll}>Ver Todos</Text>
             </TouchableOpacity>
           </View>
-          
-          <View style={styles.popularDoctorCard}>
-            <Image 
-              source={require('../../src/assets/medical/Dr. Aaron Glassman.jpg')} 
-              style={styles.popularDoctorImg} 
+          <View style={[styles.popularDoctorsList, isTablet && styles.popularDoctorsGrid]}>
+            <PopularDoctorCard
+              name="Dr. Aaron Glassman"
+              specialty="Neurocirurgião | Luanda"
+              rating="4.9 (120 reviews)"
+              image={require('../../src/assets/medical/Dr. Aaron Glassman.jpg')}
+              width={doctorCardWidth}
             />
-            <View style={styles.popularDoctorInfo}>
-              <Text style={styles.popularDoctorName}>Dr. Aaron Glassman</Text>
-              <Text style={styles.popularDoctorSpecialty}>Neurocirurgião | Aaron Glassman | Luanda</Text>
-              <View style={styles.ratingContainer}>
-                <Star size={14} color="#F59E0B" fill="#F59E0B" />
-                <Text style={styles.ratingText}>4.9 (120 reviews)</Text>
-              </View>
-            </View>
+            <PopularDoctorCard
+              name="Dra. Audrey Lim"
+              specialty="Cirurgiã de Trauma | Luanda"
+              rating="4.9 (120 reviews)"
+              image={require('../../src/assets/medical/Dra. Audrey Lim.jpg')}
+              width={doctorCardWidth}
+            />
+            <PopularDoctorCard
+              name="Dr. Marcus Andrews"
+              specialty="Neurocirurgião | Luanda"
+              rating="4.9 (120 reviews)"
+              image={require('../../src/assets/medical/Dr. Marcus Andrews.jpg')}
+              width={doctorCardWidth}
+            />
+            <PopularDoctorCard
+              name="Dr. Shaun Murphy"
+              specialty="Cirurgião Geral | Luanda"
+              rating="5.0 (250 reviews)"
+              image={require('../../src/assets/medical/Dr. Shaun Murphy.jpg')}
+              width={doctorCardWidth}
+            />
           </View>
 
-          <View style={styles.popularDoctorCard}>
-            <Image 
-              source={require('../../src/assets/medical/Dra. Audrey Lim.jpg')} 
-              style={styles.popularDoctorImg} 
-            />
-            <View style={styles.popularDoctorInfo}>
-              <Text style={styles.popularDoctorName}>Dra. Audrey Lim</Text>
-              <Text style={styles.popularDoctorSpecialty}>Cirurgiã de Trauma | Audrey Lim | Luanda</Text>
-              <View style={styles.ratingContainer}>
-                <Star size={14} color="#F59E0B" fill="#F59E0B" />
-                <Text style={styles.ratingText}>4.9 (120 reviews)</Text>
-              </View>
-            </View>
-          </View>
-
-          <View style={styles.popularDoctorCard}>
-            <Image 
-              source={require('../../src/assets/medical/Dr. Marcus Andrews.jpg')} 
-              style={styles.popularDoctorImg} 
-            />
-            <View style={styles.popularDoctorInfo}>
-              <Text style={styles.popularDoctorName}>Dr. Marcus Andrews</Text>
-              <Text style={styles.popularDoctorSpecialty}>Neurocirurgião | Marcus Andrews | Luanda</Text>
-              <View style={styles.ratingContainer}>
-                <Star size={14} color="#F59E0B" fill="#F59E0B" />
-                <Text style={styles.ratingText}>4.9 (120 reviews)</Text>
-              </View>
-            </View>
-          </View>
-
-          <View style={styles.popularDoctorCard}>
-            <Image 
-              source={require('../../src/assets/medical/Dr. Marcus Andrews.jpg')} 
-              style={styles.popularDoctorImg} 
-            />
-            <View style={styles.popularDoctorInfo}>
-              <Text style={styles.popularDoctorName}>Dr. Marcus Andrews</Text>
-              <Text style={styles.popularDoctorSpecialty}>Neurocirurgião | Marcus Andrews | Luanda</Text>
-              <View style={styles.ratingContainer}>
-                <Star size={14} color="#F59E0B" fill="#F59E0B" />
-                <Text style={styles.ratingText}>4.9 (120 reviews)</Text>
-              </View>
-            </View>
-          </View>
-          
         </View>
       </ScrollView>
 
@@ -189,31 +174,51 @@ const Home = () => {
   );
 };
 
-const ServiceItem = ({ icon, label }: { icon: React.ReactNode, label: string }) => (
-  <View style={styles.serviceItem}>
-    <View style={styles.serviceIconContainer}>
-      {icon}
+const ServiceItem = ({ icon, label }: { icon: React.ReactNode, label: string }) => {
+  const { isSmallPhone } = useBreakpoint();
+  return (
+    <View style={[styles.serviceItem, isSmallPhone && { width: 60 }]}>
+      <View style={[styles.serviceIconContainer, isSmallPhone && { width: 50, height: 50 }]}>
+        {React.isValidElement(icon) ? React.cloneElement(icon as React.ReactElement<any>, { size: isSmallPhone ? 20 : 24 }) : icon}
+      </View>
+      <Text style={[styles.serviceLabel, isSmallPhone && { fontSize: 10 }]}>{label}</Text>
     </View>
-    <Text style={styles.serviceLabel}>{label}</Text>
-  </View>
-);
+  );
+};
 
-const SpecialtyItem = ({ color, emoji, label }: { color: string, emoji: string, label: string }) => (
-  <View style={styles.specialtyItem}>
-    <View style={[styles.specialtyIconContainer, { backgroundColor: color }]}>
-      <Text style={styles.specialtyEmoji}>{emoji}</Text>
+const SpecialtyItem = ({ color, emoji, label }: { color: string, emoji: string, label: string }) => {
+  const { isSmallPhone } = useBreakpoint();
+  return (
+    <View style={[styles.specialtyItem, isSmallPhone && { width: 60 }]}>
+      <View style={[styles.specialtyIconContainer, { backgroundColor: color }, isSmallPhone && { width: 50, height: 50 }]}>
+        <Text style={[styles.specialtyEmoji, isSmallPhone && { fontSize: 24 }]}>{emoji}</Text>
+      </View>
+      <Text style={[styles.serviceLabel, isSmallPhone && { fontSize: 10 }]}>{label}</Text>
     </View>
-    <Text style={styles.serviceLabel}>{label}</Text>
+  );
+};
+
+const PopularDoctorCard = ({ name, specialty, rating, image, width }: any) => (
+  <View style={[styles.popularDoctorCard, { width }]}>
+    <Image source={image} style={styles.popularDoctorImg} />
+    <View style={styles.popularDoctorInfo}>
+      <Text style={styles.popularDoctorName}>{name}</Text>
+      <Text style={styles.popularDoctorSpecialty}>{specialty}</Text>
+      <View style={styles.ratingContainer}>
+        <Star size={14} color="#F59E0B" fill="#F59E0B" />
+        <Text style={styles.ratingText}>{rating}</Text>
+      </View>
+    </View>
   </View>
 );
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: '#FAFAFA' 
+  container: {
+    flex: 1,
+    backgroundColor: '#FAFAFA'
   },
-  scrollContent: { 
-    paddingBottom: 100 
+  scrollContent: {
+    paddingBottom: 100
   },
   header: {
     flexDirection: 'row',
@@ -222,6 +227,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 10,
     paddingBottom: 16,
+  },
+  stickySearchWrapper: {
+    backgroundColor: '#FAFAFA',
+    paddingBottom: 8,
   },
   userInfo: {
     flexDirection: 'row',
@@ -234,10 +243,18 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     backgroundColor: Colors.surface,
   },
+  avatarSmall: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
   userName: {
     fontSize: 16,
     fontWeight: 'bold',
     color: Colors.textPrimary,
+  },
+  userNameSmall: {
+    fontSize: 14,
   },
   locationContainer: {
     flexDirection: 'row',
@@ -416,6 +433,14 @@ const styles = StyleSheet.create({
   },
   specialtyEmoji: {
     fontSize: 28,
+  },
+  popularDoctorsList: {
+    width: '100%',
+  },
+  popularDoctorsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 16,
   },
   popularDoctorCard: {
     flexDirection: 'row',
